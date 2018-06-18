@@ -1,5 +1,9 @@
 SublimeLinter-contrib-cloudformation
 ================================
+
+[![Build Status](https://travis-ci.org/SublimeLinter/SublimeLinter-contrib-cloudformation.svg?branch=master)](https://travis-ci.org/SublimeLinter/SublimeLinter-contrib-cloudformation)
+
+
 This linter plugin for [SublimeLinter](https://github.com/SublimeLinter/SublimeLinter) provides an interface to [cfn-lint](https://github.com/awslabs/cfn-python-lint). This plugin lints `yaml` and `json` CloudFormation templates.
 
 
