@@ -17,7 +17,7 @@ class CfnLint(Linter):
     """Provides an interface to cfn-lint."""
 
     cmd = ('cfn-lint', '--template', '${file}', '--format', 'parseable')
-    regex = r'^.+?:(?P<line>\d+):(?P<col>\d+):\d+:\d+:((?P<warning>W)|(?P<error>E))(?P<code>.{4}):(?P<message>.+)'
+    regex = r'^.+?:(?P<line>\d+):(?P<col>\d+):\d+:\d+:((?P<warning>W|I)|(?P<error>E))(?P<code>.{4}):(?P<message>.+)'
     multiline = True
     line_col_base = (1, 1)
     tempfile_suffix = '-'
@@ -67,5 +67,15 @@ class CfnLint(Linter):
             if override_spec:
                 cmd.append('--override-spec')
                 cmd.append(override_spec)
+
+            include_checks = self.settings.get('include_checks', [])
+            if len(include_checks) > 0:
+
+                cmd.append('--include-checks')
+
+                for include_rule in include_checks:
+                    cmd.append(include_rule)
+
+            print(cmd)
 
             return super().communicate(cmd, code)
