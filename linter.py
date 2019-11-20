@@ -12,11 +12,11 @@ from SublimeLinter.lint import Linter, util
 
 import re
 
+
 class CfnLint(Linter):
     """Provides an interface to cfn-lint."""
 
     cmd = ('cfn-lint', '--template', '${file}', '--format', 'parseable')
-    executable = None
     regex = r'^.+?:(?P<line>\d+):(?P<col>\d+):\d+:\d+:((?P<warning>W)|(?P<error>E))(?P<code>.{4}):(?P<message>.+)'
     multiline = True
     line_col_base = (1, 1)
@@ -33,7 +33,7 @@ class CfnLint(Linter):
         """Run an external executable using stdin to pass code and return its output."""
         relfilename = self.filename
 
-        is_cfn = False;
+        is_cfn = False
 
         # Check if we're processing a CloudFormation file
         with open(relfilename, 'r', encoding='utf8') as file:
@@ -41,7 +41,7 @@ class CfnLint(Linter):
             regex = re.compile(r'"?AWSTemplateFormatVersion"?\s*')
 
             if regex.search(content):
-                is_cfn = True;
+                is_cfn = True
 
         if is_cfn:
             settings = self.get_view_settings()
