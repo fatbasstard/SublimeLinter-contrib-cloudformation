@@ -44,10 +44,8 @@ class CfnLint(Linter):
                 is_cfn = True
 
         if is_cfn:
-            settings = self.get_view_settings()
-
             # Add ignore rules
-            ignore_rules = settings.get('ignore_rules', [])
+            ignore_rules = self.settings.get('ignore_rules', [])
             if len(ignore_rules) > 0:
 
                 cmd.append('--ignore-checks')
@@ -56,7 +54,7 @@ class CfnLint(Linter):
                     cmd.append(ignore_rule)
 
             # Add apprent rules paths
-            append_rules = settings.get('append_rules', [])
+            append_rules = self.settings.get('append_rules', [])
             if len(append_rules) > 0:
 
                 cmd.append('--append-rules')
@@ -64,9 +62,8 @@ class CfnLint(Linter):
                 for append_rule in append_rules:
                     cmd.append(append_rule)
 
-            # Add override spdcificaton file
-            override_spec = settings.get('override_spec')
-
+            # Add override specification file
+            override_spec = self.settings.get('override_spec')
             if override_spec:
                 cmd.append('--override-spec')
                 cmd.append(override_spec)
