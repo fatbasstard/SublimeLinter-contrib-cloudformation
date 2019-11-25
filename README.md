@@ -25,21 +25,24 @@ For general information on how SublimeLinter works with settings, please see [Se
 
 You can configure `cfn-lint` by adding the following options to the Sublime Linter User Settings:
 
-* ignore_rules: Array of rules that should be ignored when testing the file
-* append_rules: Array of paths containing additional rules to be applied
-* override_spec: Path the a Specification Override file
+* `ignore_rules`: Array of rules that should be ignored when testing the file
+* `append_rules`: Array of paths containing additional rules to be applied
+* `override_spec`: Path the a Specification Override file
+* `include_checks`: Array of rules that should be included when testing the file
+    * This setting requires v0.8.0 or later.
 
 Example:
 
 ```json
 {
   "linters": {
-	  "cfnlint": {
-	    "ignore_rules": ["W2507", "W2508"],
-	    "append_rules": ["/path/to/custom/rules"],
-	    "override_spec": "/path/to/override.json"
-	  }
-	}
+    "cfnlint": {
+      "ignore_rules": ["W2507", "W2508"],
+      "append_rules": ["/path/to/custom/rules"],
+      "override_spec": "/path/to/override.json",
+      "include_checks": ["I"]
+    }
+  }
 }
 ```
 

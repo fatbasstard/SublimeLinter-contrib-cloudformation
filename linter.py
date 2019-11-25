@@ -12,12 +12,16 @@ from SublimeLinter.lint import Linter, util
 
 import re
 
+
 class CfnLint(Linter):
     """Provides an interface to cfn-lint."""
 
     cmd = ('cfn-lint', '--template', '${file}', '--format', 'parseable')
-    executable = None
-    regex = r'^.+?:(?P<line>\d+):(?P<col>\d+):\d+:\d+:((?P<warning>W)|(?P<error>E))(?P<code>.{4}):(?P<message>.+)'
+    regex = (
+        r'^.+?:(?P<line>\d+):(?P<col>\d+):\d+:\d+:'
+        r'((?P<warning>W|I)|(?P<error>E))(?P<code>.{4})'
+        r':(?P<message>.+)'
+    )
     multiline = True
     line_col_base = (1, 1)
     tempfile_suffix = '-'
@@ -33,7 +37,7 @@ class CfnLint(Linter):
         """Run an external executable using stdin to pass code and return its output."""
         relfilename = self.filename
 
-        is_cfn = False;
+        is_cfn = False
 
         # Check if we're processing a CloudFormation file
         with open(relfilename, 'r', encoding='utf8') as file:
@@ -41,13 +45,11 @@ class CfnLint(Linter):
             regex = re.compile(r'"?AWSTemplateFormatVersion"?\s*')
 
             if regex.search(content):
-                is_cfn = True;
+                is_cfn = True
 
         if is_cfn:
-            settings = self.get_view_settings()
-
             # Add ignore rules
-            ignore_rules = settings.get('ignore_rules', [])
+            ignore_rules = self.settings.get('ignore_rules', [])
             if len(ignore_rules) > 0:
 
                 cmd.append('--ignore-checks')
@@ -56,7 +58,7 @@ class CfnLint(Linter):
                     cmd.append(ignore_rule)
 
             # Add apprent rules paths
-            append_rules = settings.get('append_rules', [])
+            append_rules = self.settings.get('append_rules', [])
             if len(append_rules) > 0:
 
                 cmd.append('--append-rules')
@@ -64,11 +66,19 @@ class CfnLint(Linter):
                 for append_rule in append_rules:
                     cmd.append(append_rule)
 
-            # Add override spdcificaton file
-            override_spec = settings.get('override_spec')
-
+            # Add override specification file
+            override_spec = self.settings.get('override_spec')
             if override_spec:
                 cmd.append('--override-spec')
                 cmd.append(override_spec)
+
+            # Add additional checks
+            include_checks = self.settings.get('include_checks', [])
+            if len(include_checks) > 0:
+
+                cmd.append('--include-checks')
+
+                for include_rule in include_checks:
+                    cmd.append(include_rule)
 
             return super().communicate(cmd, code)
