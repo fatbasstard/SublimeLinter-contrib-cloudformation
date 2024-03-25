@@ -1,4 +1,4 @@
-SublimeLinter-contrib-cloudormation
+SublimeLinter-contrib-cloudformation
 -------------------------------
 This linter plugin for SublimeLinter provides an interface to `cfn-lint`,
 a linter for CloudFormation templates (both `yaml` and `json` files).
